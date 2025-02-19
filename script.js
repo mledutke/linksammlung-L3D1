@@ -1,6 +1,6 @@
 // Encryption key (should be changed to a secure random key)
 const ENCRYPTION_KEY = 'N&b6vv;6abG_zrpwjI[CQXLXh*)36}{5';
-const CORRECT_PASSWORD_HASH = '5a55601b477ed036fc949f62e0f7a9d7c68ddb458a966b2f01398d274c510c6d';
+const CORRECT_PASSWORD_HASH = '5a5e23e355dc215ff86ac4e9ebf76253de684b1f3e6786e4ae5a8c27a5577f10';
 
 // Encrypted credentials
 const encryptedCredentials = {
@@ -30,16 +30,16 @@ const encryptedCredentials = {
         "recovery": "U2FsdGVkX1/kNWVGJHINVpcF+2h0EfIT/Uimem7D4iI="
     },
     "api_keys": {
-        "google": "U2FsdGVkX19Q8QQJ5Z+kX9Y+tX8J9Z2X3Q==",
-        "openai": "U2FsdGVkX19kX9Y+tQQJ5Z+8J9Z2X3Q=="
+        "google": "U2FsdGVkX1+sPXgwxUYDqQFJaKk/ixkpxGAZeQZR5Xt4Ij5BAJqRLHYPLHEEfGxhxcqHJFxSxLxEkAXXtEJQow==",
+        "openai": "U2FsdGVkX1/4QR+5+kX9Y+tX8J9Z2X3Q+sPXgwxUYDqQFJaKk/ixkpxGAZeQZR5Xt4Ij5BAJqRLHYPLHEEfGxhxcqHJFxSxLxEkAXXtEJQow=="
     },
     "outlook": {
-        "login": "U2FsdGVkX19kX9Y+tQQJ5Z+8J9Z2X3Q==",
-        "password": "U2FsdGVkX19Q8QQJ5Z+kX9Y+tX8J9Z2X3Q=="
+        "login": "U2FsdGVkX1+mXe/yNqhg8GG7t8nqFTB/DaZykNQku0tmh3KSUIThhhVIT2YUzsR8",
+        "password": "U2FsdGVkX1/1ZTswX89XbfmUYyf2Pme3UrgmXY4l444="
     },
     "weglot": {
-        "login": "U2FsdGVkX19Q8QQJ5Z+kX9Y+tX8J9Z2X3Q==",
-        "password": "U2FsdGVkX19kX9Y+tQQJ5Z+8J9Z2X3Q=="
+        "login": "U2FsdGVkX1+mcK9wZq+EX4Ze3CbP9HYXAxn8xFG/Tiqx2T19M2lsDmXPjW8IsMVd",
+        "password": "U2FsdGVkX19rVeYMsQe/EFKHPo94IDjNglj89fqfb38="
     },
     "google_drive": {
         "login": "U2FsdGVkX1+yRQnZedsFEY31CsW4Q5vfUi6/Q8EfpDlqgYuuFAERWcGJU8gQV734",
@@ -53,8 +53,13 @@ function encrypt(text) {
 }
 
 function decrypt(ciphertext) {
-    const bytes = CryptoJS.AES.decrypt(ciphertext, ENCRYPTION_KEY);
-    return bytes.toString(CryptoJS.enc.Utf8);
+    try {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, ENCRYPTION_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+    } catch (error) {
+        console.error('Decryption error:', error);
+        throw error;
+    }
 }
 
 // Hash function for password
@@ -68,7 +73,7 @@ async function hashPassword(password) {
 
 // Check if user is already logged in and setup theme
 document.addEventListener('DOMContentLoaded', () => {
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') || sessionStorage.getItem('isLoggedIn');
     if (isLoggedIn === 'true') {
         showLinksSection();
     }
@@ -119,7 +124,8 @@ function updateThemeIcon(isDark) {
 
 // Load and decrypt credentials
 function loadDecryptedCredentials() {
-    if (!sessionStorage.getItem('isLoggedIn')) return;
+    const isLoggedIn = localStorage.getItem('isLoggedIn') || sessionStorage.getItem('isLoggedIn');
+    if (isLoggedIn !== 'true') return;
 
     try {
         // Decrypt and populate credentials
@@ -128,36 +134,56 @@ function loadDecryptedCredentials() {
             const credentialType = element.getAttribute('data-type');
             
             if (serviceType && credentialType && encryptedCredentials[serviceType]) {
-                const decryptedValue = decrypt(encryptedCredentials[serviceType][credentialType]);
-                if (element.classList.contains('password')) {
-                    element.querySelector('.hidden-text').textContent = decryptedValue;
-                    element.querySelector('.dots').textContent = '•'.repeat(decryptedValue.length);
-                } else {
-                    element.textContent = decryptedValue;
-                }
-                
-                // Update copy button value
-                const copyBtn = element.parentElement.querySelector('.copy-btn');
-                if (copyBtn) {
-                    copyBtn.setAttribute('data-value', decryptedValue);
+                try {
+                    const encryptedValue = encryptedCredentials[serviceType][credentialType];
+                    if (!encryptedValue) {
+                        console.warn(`No encrypted value found for ${serviceType}.${credentialType}`);
+                        return;
+                    }
+
+                    const decryptedValue = decrypt(encryptedValue);
+                    
+                    if (element.classList.contains('password')) {
+                        const hiddenText = element.querySelector('.hidden-text');
+                        const dots = element.querySelector('.dots');
+                        if (hiddenText && dots) {
+                            hiddenText.textContent = decryptedValue;
+                            dots.textContent = '•'.repeat(decryptedValue.length);
+                        }
+                    } else {
+                        element.textContent = decryptedValue;
+                    }
+                    
+                    // Update copy button value
+                    const copyBtn = element.parentElement.querySelector('.copy-btn');
+                    if (copyBtn) {
+                        copyBtn.setAttribute('data-value', decryptedValue);
+                    }
+                } catch (decryptError) {
+                    console.error(`Failed to decrypt ${serviceType}.${credentialType}:`, decryptError);
                 }
             }
         });
     } catch (error) {
-        console.error('Error decrypting credentials');
+        console.error('Error in loadDecryptedCredentials:', error);
         logout(); // Force logout if decryption fails
     }
 }
 
 async function checkPassword() {
     const passwordInput = document.getElementById('password');
+    const stayLoggedIn = document.getElementById('stayLoggedIn');
     const errorMessage = document.getElementById('error-message');
     
     try {
         const hashedInput = await hashPassword(passwordInput.value);
         
         if (hashedInput === CORRECT_PASSWORD_HASH) {
-            sessionStorage.setItem('isLoggedIn', 'true');
+            if (stayLoggedIn.checked) {
+                localStorage.setItem('isLoggedIn', 'true');
+            } else {
+                sessionStorage.setItem('isLoggedIn', 'true');
+            }
             showLinksSection();
             loadDecryptedCredentials();
             errorMessage.textContent = '';
@@ -179,6 +205,7 @@ function showLinksSection() {
 
 function logout() {
     sessionStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('isLoggedIn');
     document.getElementById('login-section').style.display = 'flex';
     document.getElementById('links-section').classList.add('hidden');
 }
