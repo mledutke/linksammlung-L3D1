@@ -1,0 +1,15 @@
+# Development files
+.DS_Store
+Thumbs.db
+*.log
+
+# Sensitive data
+generate_credentials.html
+credentials.json
+*.bak
+*.tmp
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-* 
