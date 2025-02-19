@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L3D1 - Link Sammlung</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="login-section">
+            <div class="login-box">
+                <h1>L3D1</h1>
+                <h2>Link Sammlung</h2>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Passwort eingeben">
+                    <button onclick="checkPassword()">Eintreten</button>
+                </div>
+                <p id="error-message" class="error"></p>
+            </div>
+        </div>
+
+        <div id="links-section" class="hidden">
+            <header>
+                <div class="header-left">
+                    <h1>L3D1 Link Sammlung</h1>
+                </div>
+                <div class="header-right">
+                    <button id="theme-toggle" class="theme-btn" title="Dark/Light Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button onclick="logout()" class="logout-btn">Abmelden</button>
+                </div>
+            </header>
+            <div class="links-container">
+                <div class="link-card">
+                    <h3>Hauptdienste</h3>
+                    <ul>
+                        <li>
+                            <a href="https://docs.google.com/spreadsheets/d/1T_SA0QgjCSwzcWw1UpiZkCkk79-7OTj8Bq9jOowp2EY/edit?usp=sharing" target="_blank" rel="noopener">Kundenverwaltung</a>
+                        </li>
+                        <li>
+                            <a href="https://eldercareplus.org/wp-admin" target="_blank" rel="noopener">Website Admin</a>
+                        </li>
+                        <li>
+                            <a href="https://drive.google.com" target="_blank" rel="noopener">Google Drive</a>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="google_drive" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="google_drive" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-card">
+                    <h3>Kommunikation & Planung</h3>
+                    <ul>
+                        <li>
+                            <a href="https://zoom.us/myhome" target="_blank" rel="noopener">Zoom</a>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="zoom" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="zoom" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="https://calendly.com/event_types/user/me" target="_blank" rel="noopener">Calendly</a>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="calendly" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="calendly" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-card">
+                    <h3>Social Media</h3>
+                    <ul>
+                        <li>
+                            <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="instagram" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="instagram" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-card">
+                    <h3>Design & Marketing</h3>
+                    <ul>
+                        <li>
+                            <span>Lottiefiles Premium</span>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="lottiefiles" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Flyeralarm</span>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="flyeralarm" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="flyeralarm" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-card">
+                    <h3>Kitalino</h3>
+                    <ul>
+                        <li>
+                            <a href="https://auth.kitalino.com/auth/realms/master/protocol/openid-connect/auth?client_id=einrichtungen&redirect_uri=https://einrichtungen.kitalino.com/auth_complete.html&response_type=code&scope=openid&code_challenge=c-_LGR5KwCqyatxxXtMv7oz8faf7BdCkXC2bDM5bKkQ&code_challenge_method=S256" target="_blank" rel="noopener">Kitalino Login</a>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="kitalino" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="kitalino" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-card">
+                    <h3>Google Account</h3>
+                    <ul>
+                        <li>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Email:</span>
+                                    <span class="credential-value" data-service="google" data-type="email"></span>
+                                    <button class="copy-btn" title="Email kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="google" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Wiederherstellung:</span>
+                                    <span class="credential-value" data-service="google" data-type="recovery"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-card">
+                    <h3>API Keys</h3>
+                    <ul>
+                        <li>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Google Browser API Key:</span>
+                                    <span class="credential-value" data-service="api_keys" data-type="google"></span>
+                                    <button class="copy-btn" title="API Key kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>OpenAI API Key:</span>
+                                    <span class="credential-value" data-service="api_keys" data-type="openai"></span>
+                                    <button class="copy-btn" title="API Key kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-card">
+                    <h3>Email & Support</h3>
+                    <ul>
+                        <li>
+                            <a href="https://outlook.office.com/mail/" target="_blank" rel="noopener">Outlook</a>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="outlook" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="outlook" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="https://dashboard.weglot.com/login" target="_blank" rel="noopener">Weglot</a>
+                            <div class="credentials">
+                                <div class="credential-item">
+                                    <span>Login:</span>
+                                    <span class="credential-value" data-service="weglot" data-type="login"></span>
+                                    <button class="copy-btn" title="Login kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="credential-item">
+                                    <span>Passwort:</span>
+                                    <span class="credential-value password" data-service="weglot" data-type="password">
+                                        <span class="hidden-text"></span>
+                                        <span class="dots"></span>
+                                    </span>
+                                    <button class="copy-btn" title="Passwort kopieren">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="toggle-btn" title="Passwort anzeigen/verstecken">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <div class="noscript-warning">
+            Diese Seite benötigt JavaScript für die sichere Verschlüsselung Ihrer Daten.
+        </div>
+    </noscript>
+    <script src="script.js"></script>
+</body>
+</html> 
