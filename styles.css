@@ -10,6 +10,8 @@
     --success-color: #2ecc71;
     --card-bg: white;
     --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --audio-btn-color: #3498db;
+    --audio-btn-hover: #2980b9;
 }
 
 [data-theme="dark"] {
@@ -23,6 +25,8 @@
     --success-color: #2ecc71;
     --card-bg: #2c2c2c;
     --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --audio-btn-color: #3498db;
+    --audio-btn-hover: #2980b9;
 }
 
 * {
@@ -63,6 +67,12 @@ body {
     width: 100%;
     max-width: 400px;
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    animation: float 6s infinite ease-in-out;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
 }
 
 .login-box:hover {
@@ -95,14 +105,31 @@ input[type="password"] {
     transition: border-color 0.3s ease;
     background-color: var(--credential-bg);
     color: var(--text-color);
+    position: relative;
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+    animation: pulse 2s infinite;
 }
 
 input[type="password"]:focus {
     border-color: var(--secondary-color);
     outline: none;
+    animation: glow 1.5s infinite alternate;
 }
 
-button {
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.2),
+                    0 0 10px rgba(52, 152, 219, 0.2),
+                    0 0 15px rgba(52, 152, 219, 0.2);
+    }
+    to {
+        box-shadow: 0 0 10px rgba(52, 152, 219, 0.4),
+                    0 0 20px rgba(52, 152, 219, 0.4),
+                    0 0 30px rgba(52, 152, 219, 0.4);
+    }
+}
+
+.input-group button {
     background-color: var(--secondary-color);
     color: white;
     border: none;
@@ -110,17 +137,41 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: pulse 2s infinite;
 }
 
-button:hover {
-    background-color: #2980b9;
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+    }
+}
+
+.input-group button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+
+.input-group button:active {
+    transform: translateY(0);
 }
 
 .error {
     color: var(--accent-color);
     margin-top: 1rem;
     font-size: 0.9rem;
+    animation: shake 0.5s ease-in-out;
 }
 
 /* Header Styling */
@@ -339,4 +390,105 @@ header {
 .stay-logged-in label {
     cursor: pointer;
     font-size: 0.9rem;
+}
+
+/* Particle Animation Background */
+@keyframes moveParticle {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(10px, 10px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+#login-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(52, 152, 219, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 75% 75%, rgba(52, 152, 219, 0.1) 2px, transparent 2px);
+    background-size: 50px 50px;
+    animation: moveParticle 8s infinite ease-in-out;
+    pointer-events: none;
+}
+
+/* Enhanced Login Box Animation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    }
+    100% {
+        transform: translateY(0px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Wrong Password Animation */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .login-box {
+    background: rgba(44, 44, 44, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] #login-section::before {
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(52, 152, 219, 0.2) 2px, transparent 2px),
+        radial-gradient(circle at 75% 75%, rgba(52, 152, 219, 0.2) 2px, transparent 2px);
+}
+
+/* Audio Control Styling */
+.audio-control {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.audio-btn {
+    background: none;
+    border: none;
+    color: var(--audio-btn-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-btn:hover {
+    color: var(--audio-btn-hover);
+    transform: scale(1.1);
+}
+
+.audio-btn.muted .fa-volume-up:before {
+    content: "\f6a9";  /* FontAwesome icon for volume muted */
 } 

@@ -268,4 +268,69 @@ function showToast(message) {
     setTimeout(() => {
         toast.style.display = 'none';
     }, 2000);
-} 
+}
+
+// Audio Control with improved autoplay
+const toggleAudio = document.getElementById('toggleAudio');
+const bgMusic = document.getElementById('bgMusic');
+let isPlaying = false;
+
+// Set initial volume and properties
+bgMusic.volume = 0.3;
+bgMusic.autoplay = true;
+
+// Function to update audio button state
+function updateAudioButton(playing) {
+    if (playing) {
+        toggleAudio.classList.remove('muted');
+        toggleAudio.querySelector('i').className = 'fas fa-volume-up';
+    } else {
+        toggleAudio.classList.add('muted');
+        toggleAudio.querySelector('i').className = 'fas fa-volume-mute';
+    }
+}
+
+// Function to properly start audio
+async function startAudio() {
+    try {
+        await bgMusic.play();
+        isPlaying = true;
+        updateAudioButton(true);
+    } catch (error) {
+        console.log("Audio autoplay was prevented:", error);
+        isPlaying = false;
+        updateAudioButton(false);
+    }
+}
+
+// Improved click handler
+toggleAudio.addEventListener('click', () => {
+    if (isPlaying) {
+        bgMusic.pause();
+        isPlaying = false;
+        updateAudioButton(false);
+    } else {
+        startAudio();
+    }
+});
+
+// Try to start audio as soon as possible
+document.addEventListener('DOMContentLoaded', () => {
+    startAudio();
+});
+
+// Multiple event listeners for different user interactions
+['click', 'touchstart', 'keydown', 'mousemove', 'scroll'].forEach(event => {
+    document.addEventListener(event, () => {
+        if (!isPlaying) {
+            startAudio();
+        }
+    }, { once: true });
+});
+
+// Additional check for visibility changes
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !isPlaying) {
+        startAudio();
+    }
+}); 
