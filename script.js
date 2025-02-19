@@ -333,4 +333,59 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && !isPlaying) {
         startAudio();
     }
+});
+
+// Search functionality
+const searchInput = document.getElementById('searchInput');
+let searchTimeout;
+
+searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    
+    // Add debounce to prevent too many searches while typing
+    searchTimeout = setTimeout(() => {
+        const searchTerm = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.link-card');
+        
+        cards.forEach(card => {
+            const cardTitle = card.querySelector('h3').textContent.toLowerCase();
+            const links = Array.from(card.querySelectorAll('a')).map(a => a.textContent.toLowerCase());
+            const credentials = Array.from(card.querySelectorAll('.credential-value')).map(c => c.textContent.toLowerCase());
+            
+            const allText = [cardTitle, ...links, ...credentials].join(' ');
+            
+            if (searchTerm === '' || allText.includes(searchTerm)) {
+                card.classList.remove('hidden-search');
+                // Add fade in animation
+                card.style.animation = 'fadeIn 0.3s ease forwards';
+            } else {
+                card.classList.add('hidden-search');
+                card.style.animation = 'fadeOut 0.3s ease forwards';
+            }
+        });
+    }, 300); // 300ms delay
+});
+
+// Add these animations to your CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(10px); }
+    }
+`;
+document.head.appendChild(style);
+
+// Clear search when escaping
+searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        searchInput.value = '';
+        const event = new Event('input');
+        searchInput.dispatchEvent(event);
+        searchInput.blur();
+    }
 }); 

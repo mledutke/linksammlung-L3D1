@@ -39,12 +39,19 @@
             <header>
                 <div class="header-left">
                     <h1>L3D1 Link Sammlung</h1>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Suchen..." />
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
                 </div>
                 <div class="header-right">
                     <button id="theme-toggle" class="theme-btn" title="Dark/Light Mode">
                         <i class="fas fa-moon"></i>
+                        <span>Theme</span>
                     </button>
-                    <button onclick="logout()" class="logout-btn">Abmelden</button>
+                    <button onclick="logout()" class="logout-btn" title="Abmelden">
+                        <span>Abmelden</span>
+                    </button>
                 </div>
             </header>
             <div class="links-container">
